@@ -90,13 +90,12 @@ The solution consists of the following components:
   
 
 ### Architecture Diagram:
-![Serverless Task Manager Architecture](Screenshot 2026-08-19 122230.png)
 
 
 The project architecture diagram is available in:
 
 ```text
-architecture.png
+[Serverless Task Manager Architecture](Screenshot 2026-08-19 122230.png)
 ```
 
 ---
