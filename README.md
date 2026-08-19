@@ -93,9 +93,11 @@ The solution consists of the following components:
 
 
 The project architecture diagram is available in:
+<img width="1051" height="750" alt="Screenshot 2026-08-19 122230" src="https://github.com/user-attachments/assets/511b54b6-ebc5-4275-a8a6-715c06515e7a" />
+
 
 ```text
-[Serverless Task Manager Architecture](Screenshot 2026-08-19 122230.png)
+
 ```
 
 ---
