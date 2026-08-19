@@ -88,7 +88,7 @@ The solution consists of the following components:
 * **Amazon CloudWatch** – Collects Lambda execution logs.
 * **Terraform** – Provisions and manages the infrastructure.
   
-![Solution Architecture](Screenshot 2026-08-19 122230.png)
+![Serverless Task Manager Architecture](Screenshot 2026-08-19 122230.png)
 
 ### Architecture Diagram
 
