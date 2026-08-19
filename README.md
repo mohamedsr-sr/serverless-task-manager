@@ -1,77 +1,119 @@
 # Serverless Task Manager
 
-A serverless task management API built using AWS Lambda, Amazon API Gateway, Amazon DynamoDB, AWS IAM, Amazon CloudWatch, and Terraform.
+A serverless task management REST API built using **AWS Lambda, Amazon API Gateway, Amazon DynamoDB, AWS IAM, Amazon CloudWatch, and Terraform**.
 
-The project demonstrates how to build and manage a serverless REST API using Infrastructure as Code (IaC), with AWS Lambda handling the application logic and DynamoDB providing persistent task storage.
-
-## Table of Contents
-
-- [Solution Overview](#solution-overview)
-- [Architecture Diagram](#architecture-diagram)
-- [AWS Services](#aws-services)
-- [Project Structure](#project-structure)
-- [API Endpoints](#api-endpoints)
-- [Infrastructure as Code](#infrastructure-as-code)
-- [Prerequisites](#prerequisites)
-- [AWS Configuration](#aws-configuration)
-- [Terraform Deployment](#terraform-deployment)
-- [Testing](#testing)
-- [Monitoring and Logging](#monitoring-and-logging)
-- [Security](#security)
-- [Infrastructure Cleanup](#infrastructure-cleanup)
-- [Future Improvements](#future-improvements)
-- [License](#license)
+This project demonstrates how to build and manage a serverless application using **Infrastructure as Code (IaC)**, with AWS Lambda handling the application logic and DynamoDB providing persistent task storage.
 
 ---
 
-## Solution Overview
+## 📋 Table of Contents
 
-The Serverless Task Manager is a REST API designed to create and retrieve tasks using a fully serverless AWS architecture.
+* [Solution Overview](#solution-overview)
+* [Architecture](#architecture)
+* [AWS Services](#aws-services)
+* [Project Structure](#project-structure)
+* [API Endpoints](#api-endpoints)
+* [Infrastructure as Code](#infrastructure-as-code)
+* [Prerequisites](#prerequisites)
+* [AWS Configuration](#aws-configuration)
+* [Terraform Deployment](#terraform-deployment)
+* [Terraform Outputs](#terraform-outputs)
+* [Testing](#testing)
+* [Monitoring and Logging](#monitoring-and-logging)
+* [Security](#security)
+* [Infrastructure Cleanup](#infrastructure-cleanup)
+* [Future Improvements](#future-improvements)
+* [Technologies](#technologies)
+* [Author](#author)
+* [License](#license)
 
-The solution uses Amazon API Gateway as the entry point for HTTP requests. API Gateway routes requests to AWS Lambda functions, which process the application logic and communicate with Amazon DynamoDB for data storage.
+---
 
-The infrastructure is defined and managed using Terraform.
+## 🚀 Solution Overview
 
-### Main Request Flow
+The **Serverless Task Manager** is a REST API designed to create and retrieve tasks using a fully serverless AWS architecture.
+
+The application uses **Amazon API Gateway** as the entry point for HTTP requests. API Gateway routes requests to **AWS Lambda** functions, which process the application logic and communicate with **Amazon DynamoDB** for persistent data storage.
+
+The entire infrastructure is provisioned and managed using **Terraform**.
+
+### Request Flow
 
 ```text
-Client
-   |
-   v
-Amazon API Gateway
-   |
-   +--------------------+
-   |                    |
-   v                    v
-POST /tasks          GET /tasks
-   |                    |
-   v                    v
-Create Task Lambda   Get Tasks Lambda
-   |                    |
-   +---------+----------+
-             |
-             v
-      Amazon DynamoDB
-Architecture Diagram
+                         ┌──────────────────┐
+                         │      Client      │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                       ┌─────────────────────┐
+                       │   Amazon API        │
+                       │      Gateway        │
+                       └─────────┬───────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │                         │
+                    ▼                         ▼
+              POST /tasks                GET /tasks
+                    │                         │
+                    ▼                         ▼
+          ┌─────────────────┐       ┌─────────────────┐
+          │  Create Task    │       │   Get Tasks     │
+          │     Lambda      │       │     Lambda      │
+          └────────┬────────┘       └────────┬────────┘
+                   │                         │
+                   └────────────┬────────────┘
+                                │
+                                ▼
+                      ┌─────────────────────┐
+                      │   Amazon DynamoDB   │
+                      │    Tasks Table      │
+                      └─────────────────────┘
 
-The architecture consists of:
+          AWS IAM → Permissions & Access Control
+          CloudWatch → Logging & Monitoring
+          Terraform → Infrastructure as Code
+```
 
-Client
-Amazon API Gateway
-AWS Lambda
-Amazon DynamoDB
-AWS IAM
-Amazon CloudWatch
-Terraform
-AWS Services
-AWS Service	Purpose
-Amazon API Gateway	Provides the HTTP API and routes requests
-AWS Lambda	Executes serverless application logic
-Amazon DynamoDB	Stores task data
-AWS IAM	Provides permissions and execution roles
-Amazon CloudWatch	Collects Lambda logs
-Terraform	Provisions and manages AWS infrastructure
-Project Structure
+---
+
+## 🏗️ Architecture
+
+The solution consists of the following components:
+
+* **Client** – Sends HTTP requests to the API.
+* **Amazon API Gateway** – Provides the REST API and routes requests.
+* **AWS Lambda** – Executes the application logic.
+* **Amazon DynamoDB** – Stores task data.
+* **AWS IAM** – Controls permissions and access between AWS services.
+* **Amazon CloudWatch** – Collects Lambda execution logs.
+* **Terraform** – Provisions and manages the infrastructure.
+
+### Architecture Diagram
+
+The project architecture diagram is available in:
+
+```text
+architecture.png
+```
+
+---
+
+## ☁️ AWS Services
+
+| Service                | Purpose                                             |
+| ---------------------- | --------------------------------------------------- |
+| **Amazon API Gateway** | Provides the HTTP API and routes requests to Lambda |
+| **AWS Lambda**         | Executes serverless application logic               |
+| **Amazon DynamoDB**    | Provides persistent task storage                    |
+| **AWS IAM**            | Manages permissions and Lambda execution roles      |
+| **Amazon CloudWatch**  | Collects and monitors Lambda logs                   |
+| **Terraform**          | Provisions and manages AWS infrastructure           |
+
+---
+
+## 📁 Project Structure
+
+```text
 serverless-task-manager/
 │
 ├── terraform/
@@ -91,202 +133,325 @@ serverless-task-manager/
 ├── architecture.png
 ├── .gitignore
 └── README.md
-API Endpoints
-Create Task
+```
+
+---
+
+## 🔌 API Endpoints
+
+### 1. Create Task
 
 Creates a new task and stores it in DynamoDB.
 
-Endpoint:
+**Method:**
 
+```text
 POST /tasks
+```
 
-Request Body:
+**Request Body:**
 
+```json
 {
   "title": "Learn Terraform",
   "description": "Build a serverless application using AWS"
 }
-Get Tasks
+```
+
+---
+
+### 2. Get Tasks
 
 Returns all tasks stored in DynamoDB.
 
-Endpoint:
+**Method:**
 
+```text
 GET /tasks
-Infrastructure as Code
+```
 
-Terraform is used to provision and manage the AWS infrastructure.
+---
+
+## 🛠️ Infrastructure as Code
+
+Terraform is used to provision and manage the complete AWS infrastructure.
 
 Terraform manages:
 
-Amazon API Gateway
-AWS Lambda
-Amazon DynamoDB
-IAM Roles
-IAM Policies
-Lambda Permissions
-CloudWatch logging
-Prerequisites
+* Amazon API Gateway
+* AWS Lambda functions
+* Amazon DynamoDB
+* IAM execution roles
+* IAM policies
+* Lambda permissions
+* CloudWatch logging resources
 
-Before deploying the project, install:
+Using Terraform provides:
 
-AWS CLI
-Terraform
-Git
-Python 3.12+
+* **Infrastructure as Code**
+* **Repeatable deployments**
+* **Version-controlled infrastructure**
+* **Easy infrastructure cleanup**
+* **Consistent environments**
+
+---
+
+## 📦 Prerequisites
+
+Before deploying the project, make sure the following tools are installed:
+
+* AWS CLI
+* Terraform
+* Git
+* Python 3.12+
 
 Verify the installations:
 
+```bash
 aws --version
 terraform -version
 git --version
 python --version
-AWS Configuration
+```
+
+---
+
+## 🔐 AWS Configuration
 
 Configure the AWS CLI:
 
+```bash
 aws configure
+```
 
-Configure your:
+Provide the required information:
 
+```text
 AWS Access Key ID
 AWS Secret Access Key
 Default region: us-east-1
 Default output format: json
+```
 
 Verify your AWS identity:
 
+```bash
 aws sts get-caller-identity
+```
 
-Never commit AWS credentials, secrets, or Terraform state files to GitHub.
+> ⚠️ **Security Note:** Never commit AWS credentials, secrets, or Terraform state files to GitHub.
 
-Terraform Deployment
+---
+
+## 🚀 Terraform Deployment
 
 Navigate to the Terraform directory:
 
+```bash
 cd terraform
+```
 
-Initialize Terraform:
+### 1. Initialize Terraform
 
+```bash
 terraform init
+```
 
-Format the Terraform files:
+### 2. Format Terraform Files
 
+```bash
 terraform fmt
+```
 
-Validate the configuration:
+### 3. Validate the Configuration
 
+```bash
 terraform validate
+```
 
-Preview the infrastructure changes:
+### 4. Preview Infrastructure Changes
 
+```bash
 terraform plan
+```
 
-Deploy the infrastructure:
+### 5. Deploy the Infrastructure
 
+```bash
 terraform apply
+```
 
 Confirm the deployment when prompted:
 
+```text
 yes
-Terraform Outputs
+```
 
-After deployment:
+After successful deployment, Terraform will create the required AWS resources.
 
+---
+
+## 📤 Terraform Outputs
+
+After deployment, you can retrieve important infrastructure information using Terraform outputs.
+
+### API URL
+
+```bash
 terraform output api_url
+```
 
-Get the DynamoDB table name:
+### DynamoDB Table Name
 
+```bash
 terraform output dynamodb_table_name
+```
 
-Get the Create Task Lambda name:
+### Create Task Lambda Name
 
+```bash
 terraform output create_task_lambda_name
+```
 
-Get the Get Tasks Lambda name:
+### Get Tasks Lambda Name
 
+```bash
 terraform output get_tasks_lambda_name
-Testing
-Get Tasks
+```
+
+---
+
+## 🧪 Testing
+
+After deployment, use the API URL returned by Terraform.
+
+### Get Tasks
+
+```bash
 curl https://YOUR_API_URL/tasks
-Create Task
+```
+
+### Create Task
+
+```bash
 curl -X POST https://YOUR_API_URL/tasks \
   -H "Content-Type: application/json" \
   -d "{\"title\":\"Learn AWS\",\"description\":\"Build a serverless application\"}"
+```
 
-After creating a task, call:
+Then retrieve the tasks:
 
+```bash
 curl https://YOUR_API_URL/tasks
+```
 
-The created task should be returned from DynamoDB.
+The newly created task should be returned from DynamoDB.
 
-Monitoring and Logging
+---
 
-AWS Lambda sends execution logs to Amazon CloudWatch Logs.
+## 📊 Monitoring and Logging
+
+AWS Lambda automatically integrates with **Amazon CloudWatch Logs**.
 
 CloudWatch can be used to monitor:
 
-Lambda invocations
-Lambda errors
-Execution duration
-Application logs
-API activity
-Security
+* Lambda invocations
+* Lambda errors
+* Execution duration
+* Application logs
+* API activity
+* Function performance
 
-The project uses AWS IAM to control access between Lambda and DynamoDB.
+Lambda execution logs can be viewed from the AWS Management Console under:
 
-Lambda functions use IAM execution roles with permissions required for:
+```text
+CloudWatch
+    ↓
+Log groups
+    ↓
+/aws/lambda/<lambda-function-name>
+```
 
-DynamoDB operations
-CloudWatch logging
+---
 
-Security best practices:
+## 🔒 Security
 
-Never commit AWS credentials.
-Never commit Terraform state files.
-Do not hard-code secrets.
-Use IAM roles instead of hard-coded credentials.
-Follow the principle of least privilege.
-Infrastructure Cleanup
+The project uses **AWS IAM** to control access between Lambda and DynamoDB.
 
-When the infrastructure is no longer needed:
+Lambda execution roles provide only the permissions required for:
 
+* DynamoDB operations
+* CloudWatch logging
+
+### Security Best Practices
+
+* Never commit AWS credentials.
+* Never commit Terraform state files.
+* Do not hard-code secrets.
+* Use IAM roles instead of hard-coded credentials.
+* Follow the **Principle of Least Privilege**.
+* Keep `.terraform/` and sensitive Terraform files excluded using `.gitignore`.
+
+---
+
+## 🧹 Infrastructure Cleanup
+
+When the infrastructure is no longer needed, destroy the AWS resources managed by Terraform:
+
+```bash
 terraform destroy
+```
 
 Confirm when prompted:
 
+```text
 yes
+```
 
-This removes the AWS resources managed by Terraform and helps avoid unnecessary AWS charges.
+This removes the resources created by Terraform and helps prevent unnecessary AWS charges.
 
-Future Improvements
-Add PUT /tasks/{id}
-Add DELETE /tasks/{id}
-Add task status management
-Add authentication using Amazon Cognito
-Add automated unit tests
-Add CI/CD using GitHub Actions
-Add Terraform remote state
-Add development and production environments
-Add CloudWatch alarms
-Add custom API domain
-Add OpenAPI documentation
-Technologies
-AWS Lambda
-Amazon API Gateway
-Amazon DynamoDB
-AWS IAM
-Amazon CloudWatch
-Terraform
-Python
-Git
-GitHub
-Author
+---
 
-Mohamed Yasser
+## 🔮 Future Improvements
 
-DevOps / Cloud Engineer
+Planned improvements include:
 
-License
+* [ ] Add `PUT /tasks/{id}`
+* [ ] Add `DELETE /tasks/{id}`
+* [ ] Add task status management
+* [ ] Add authentication using Amazon Cognito
+* [ ] Add automated unit tests
+* [ ] Add CI/CD using GitHub Actions
+* [ ] Add Terraform remote state
+* [ ] Add development and production environments
+* [ ] Add CloudWatch alarms
+* [ ] Add custom API domain
+* [ ] Add OpenAPI documentation
 
-This project is created for educational and portfolio purposes.
+---
+
+## 💻 Technologies
+
+* **AWS Lambda**
+* **Amazon API Gateway**
+* **Amazon DynamoDB**
+* **AWS IAM**
+* **Amazon CloudWatch**
+* **Terraform**
+* **Python**
+* **Git**
+* **GitHub**
+
+---
+
+## 👨‍💻 Author
+
+**Mohamed Yasser**
+
+**DevOps / Cloud Engineer**
+
+---
+
+## 📄 License
+
+This project is created for **educational and portfolio purposes**.
