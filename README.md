@@ -87,6 +87,8 @@ The solution consists of the following components:
 * **AWS IAM** – Controls permissions and access between AWS services.
 * **Amazon CloudWatch** – Collects Lambda execution logs.
 * **Terraform** – Provisions and manages the infrastructure.
+  
+![Solution Architecture](Screenshot 2026-08-19 122230.png)
 
 ### Architecture Diagram
 
